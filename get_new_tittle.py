@@ -21,14 +21,12 @@ class Paper:
         return f"Paper({self.title}, {self.authors}, {self.abstract}, {self.keywords})"
 
 class find_paper:
-    def __init__(self, url):
-        self.url = url
-
+ 
     def search_new(self, keywords, *keywords2):
         
         url_temp='https://arxiv.org/search/advanced?advanced=&terms-0-operator=AND&terms-0-term={keywords}&terms-0-field=all&terms-1-operator=AND&terms-1-term={keywords2}&terms-1-field=title&terms-2-operator=AND&terms-2-term={keywords2}&terms-2-field=title&classification-physics_archives=all&classification-include_cross_list=include&date-filter_by=all_dates&date-year=&date-from_date=&date-to_date=&date-date_type=submitted_date&abstracts=show&size=50&order=-announced_date_first'   
-        # url=url_temp.format(keywords=keywords,keywords2=','.join(keywords2))
-        url=url_temp.format(keywords=keywords,keywords2=keywords2)
+        url=url_temp.format(keywords=keywords,keywords2=','.join(keywords2))
+        # url=url_temp.format(keywords=keywords,keywords2=keywords2)
         # url = self.url.format(keywords=keywords,keywords2=keywords2)
         response = requests.get(url)
         search_results = response.text
@@ -108,10 +106,13 @@ class find_paper:
             print("Failed to send email:", e)
 
 
-a = find_paper
-papers_list = a.search_new('grasp', 'manipulation', 'reinforcement')[0]
+# a = find_paper('https://arxiv.org/search/advanced?advanced=&terms-0-operator=AND&terms-0-term={keywords}&terms-0-field=all&terms-1-operator=AND&terms-1-term={keywords2}&terms-1-field=title&terms-2-operator=AND&terms-2-term={keywords2}&terms-2-field=title&classification-physics_archives=all&classification-include_cross_list=include&date-filter_by=all_dates&date-year=&date-from_date=&date-to_date=&date-date_type=submitted_date&abstracts=show&size=50&order=-announced_date_first')
+# a=find_paper('https://arxiv.org/search/advanced?advanced=&terms-0-operator=AND&terms-0-term={keywords}&terms-0-field=all&terms-1-operator=AND&terms-1-term={keywords2}&terms-1-field=title&terms-2-operator=AND&terms-2-term={keywords2}&terms-2-field=title&classification-physics_archives=all&classification-include_cross_list=include&date-filter_by=all_dates&date-year=&date-from_date=&date-to_date=&date-date_type=submitted_date&abstracts=show&size=50&order=-announced_date_first')
+papers_list = find_paper.search_new('grasp', 'manipulation', 'reinforcement')[0]
 # print(a.search_new('grasp', 'manipulation', 'reinforcement')[1])
-titles_list=a.search_new('grasp', 'manipulation', 'reinforcement')[1]
-new_titles = a.check_new(titles_list)
-print(new_titles)
-a.send_email(new_titles)
+titles_list=find_paper.search_new('grasp', 'manipulation', 'reinforcement')[1]
+# new_titles = a.check_new(titles_list)
+while True:
+    time.sleep(200)
+    new_titles = find_paper.check_new(titles_list)
+    find_paper.send_email(new_titles)
